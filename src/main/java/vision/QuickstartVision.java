@@ -83,9 +83,9 @@ public class QuickstartVision {
 					 k, v.toString()); } });
 					 
 
-					result = "LIKELY".equals(faces.getAllFields().entrySet().stream()
+					result = faces.getAllFields().entrySet().stream()
 							.filter(x -> x.getKey().toString().contains("anger_likelihood"))
-							.map(x -> x.getValue().toString()).collect(Collectors.joining()));
+							.map(x -> x.getValue().toString()).collect(Collectors.joining()).contains("LIKELY");
 					System.out.println(result);
 					
 				}
