@@ -1,8 +1,17 @@
 package vision;
 
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 
 /*
  * Copyright 2017 Google Inc.
@@ -45,12 +54,6 @@ public class QuickstartVision {
 		boolean result = false;
 		try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
 
-			// The path to the image file to annotate
-			/*String fileName = "D:\\Ecole2\\workshop I4\\images\\colere-2.jpg";
-
-			// Reads the image file into memory
-			Path path = Paths.get(fileName);
-			byte[] data = Files.readAllBytes(path);*/
 			ByteString imgBytes = ByteString.copyFrom(data);
 
 			// Builds the image annotation request
@@ -59,6 +62,8 @@ public class QuickstartVision {
 			Feature feat = Feature.newBuilder().setType(Type.FACE_DETECTION).build();
 			AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
 			requests.add(request);
+			
+			
 
 			// Performs label detection on the image file
 			BatchAnnotateImagesResponse response = vision.batchAnnotateImages(requests);
@@ -72,11 +77,11 @@ public class QuickstartVision {
 
 				for (FaceAnnotation faces : res.getFaceAnnotationsList()) {
 					System.out.println("------ faces -------");
-					/*
-					 * faces.getAllFields().forEach((k, v) -> {
-					 * if(k.getFullName().contains("likelihood")) { System.out.printf("%s : %s\n",
-					 * k, v.toString()); } });
-					 */
+					
+					 faces.getAllFields().forEach((k, v) -> {
+					 if(k.getFullName().contains("likelihood")) { System.out.printf("%s : %s\n",
+					 k, v.toString()); } });
+					 
 
 					result = "LIKELY".equals(faces.getAllFields().entrySet().stream()
 							.filter(x -> x.getKey().toString().contains("anger_likelihood"))

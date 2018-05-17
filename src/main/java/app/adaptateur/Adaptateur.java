@@ -1,6 +1,7 @@
 package app.adaptateur;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 
 import javax.ws.rs.Consumes;
@@ -13,6 +14,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,14 +50,20 @@ public class Adaptateur {
 	@POST
 	@Path("fichier/video")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// @RequestParam("uploadedFile") MultipartFile uploadedFileRef
-	public Response postFichierVideo(@FormParam("file") String stream,
+	public Response postFichierVideo(@FormDataParam("file") InputStream stream, @FormDataParam("file") FormDataContentDisposition fileMetaData,
 		 @QueryParam("idPc") String idPc) throws Exception {
 		System.out.println("PostFichier");
+		System.out.println(stream);
+		System.out.println(idPc);
 		
-		if(quickstartVision.start(Base64.getDecoder().decode(stream))){
+		
+		if(quickstartVision.start(Base64.getDecoder().decode(IOUtils.toByteArray(stream)))){
 			envoiMail.sendMail(idPc, "Vision");
 		}
+		
+		/*if(quickstartVision.start(Base64.getDecoder().decode(stream))){
+			envoiMail.sendMail(idPc, "Vision");
+		}*/
 	/*	
 		String UPLOAD_PATH = "./tmp";
 		File file = new File(UPLOAD_PATH + fileMetaData.getFileName());
@@ -79,11 +89,11 @@ public class Adaptateur {
 
 	@POST
 	@Path("fichier/audio")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	// @RequestParam("uploadedFile") MultipartFile uploadedFileRef
-	public Response postFichierAudio(@FormParam("file") String stream, @QueryParam("idPc") String idPc) throws IOException, Exception {
+	public Response postFichierAudio(@FormDataParam("file") InputStream stream, @QueryParam("idPc") String idPc) throws IOException, Exception {
 		
-		if(quickstartSpeech.start(Base64.getDecoder().decode(stream))) {
+		if(quickstartSpeech.start(Base64.getDecoder().decode(IOUtils.toByteArray(stream)))) {
 			envoiMail.sendMail(idPc, "Speech");
 		}
 
