@@ -51,7 +51,9 @@ public class Adaptateur {
 		 @QueryParam("idPc") String idPc) throws Exception {
 		System.out.println("PostFichier");
 		
-		quickstartVision.start(Base64.getDecoder().decode(stream));
+		if(quickstartVision.start(Base64.getDecoder().decode(stream))){
+			envoiMail.sendMail(idPc, "Vision");
+		}
 	/*	
 		String UPLOAD_PATH = "./tmp";
 		File file = new File(UPLOAD_PATH + fileMetaData.getFileName());
@@ -81,7 +83,9 @@ public class Adaptateur {
 	// @RequestParam("uploadedFile") MultipartFile uploadedFileRef
 	public Response postFichierAudio(@FormParam("file") String stream, @QueryParam("idPc") String idPc) throws IOException, Exception {
 		
-		quickstartSpeech.start(Base64.getDecoder().decode(stream));
+		if(quickstartSpeech.start(Base64.getDecoder().decode(stream))) {
+			envoiMail.sendMail(idPc, "Speech");
+		}
 
 		return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 	}
