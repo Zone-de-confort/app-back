@@ -1,8 +1,5 @@
 package vision;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,17 +40,17 @@ public class QuickstartVision {
 	 * @return vrai si en colère
 	 * @throws Exception pas de résultat
 	 */
-	public boolean start() throws Exception {
+	public boolean start(byte[] data) throws Exception {
 		// Instantiates a client
 		boolean result = false;
 		try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
 
 			// The path to the image file to annotate
-			String fileName = "D:\\Ecole2\\workshop I4\\images\\colere-2.jpg";
+			/*String fileName = "D:\\Ecole2\\workshop I4\\images\\colere-2.jpg";
 
 			// Reads the image file into memory
 			Path path = Paths.get(fileName);
-			byte[] data = Files.readAllBytes(path);
+			byte[] data = Files.readAllBytes(path);*/
 			ByteString imgBytes = ByteString.copyFrom(data);
 
 			// Builds the image annotation request

@@ -1,8 +1,5 @@
 package speech;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -45,18 +42,18 @@ public class QuickStartSpeech {
 	 * Demonstrates using the Speech API to transcribe an audio file.
 	 * retourne vrai si un mot tabou est trouvé
 	 */
-	public boolean start() throws Exception {
+	public boolean start(byte[] data) throws Exception {
 
 		boolean retour = false;
 		// Instantiates a client
 		try (SpeechClient speechClient = SpeechClient.create()) {
 
 			// The path to the audio file to transcribe
-			String fileName = "D:\\Ecole2\\workshop I4\\audio\\putain.wav";
+			//String fileName = "D:\\Ecole2\\workshop I4\\audio\\putain.wav";
 
 			// Reads the audio file into memory
-			Path path = Paths.get(fileName);
-			byte[] data = Files.readAllBytes(path);
+			//Path path = Paths.get(fileName);
+			// byte[] data = Files.readAllBytes(path);
 			ByteString audioBytes = ByteString.copyFrom(data);
 
 			// Builds the sync recognize request

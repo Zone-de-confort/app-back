@@ -1,6 +1,5 @@
 package app;
 
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,6 @@ public class JerseyConfig extends ResourceConfig {
         register(Adaptateur.class);
         register(ApplicationContextProvider.class);
         register(CipherUtilSecret.class);
-        register(MultiPartFeature.class);
     }
 
 }

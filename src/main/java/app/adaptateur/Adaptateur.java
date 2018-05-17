@@ -1,27 +1,24 @@
 package app.adaptateur;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Base64;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mail.EnvoiMail;
+import speech.QuickStartSpeech;
+import vision.QuickstartVision;
 
 /**
  * Point d'entrée (et déclaration) des services REST pour les utilisateurs,
@@ -39,29 +36,42 @@ public class Adaptateur {
 
 	@Autowired
 	private EnvoiMail envoiMail;
+	
+	@Autowired
+	private QuickStartSpeech quickstartSpeech;
+	
+	@Autowired
+	private QuickstartVision quickstartVision;
 
 	@POST
 	@Path("fichier/video")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	// @RequestParam("uploadedFile") MultipartFile uploadedFileRef
-	public Response postFichierVideo(@FormDataParam("file") InputStream stream,
-			@FormDataParam("file") FormDataContentDisposition fileMetaData, @QueryParam("idPc") String idPc) {
+	public Response postFichierVideo(@FormParam("file") String stream,
+		 @QueryParam("idPc") String idPc) throws Exception {
 		System.out.println("PostFichier");
-		String UPLOAD_PATH = "C:\\Users\\Romain\\Desktop\\";
+		
+		quickstartVision.start(Base64.getDecoder().decode(stream));
+	/*	
+		String UPLOAD_PATH = "./tmp";
+		File file = new File(UPLOAD_PATH + fileMetaData.getFileName());
 		try {
 			int read = 0;
 			byte[] bytes = new byte[1024];
 
-			OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + fileMetaData.getFileName()));
+			OutputStream out = new FileOutputStream(file);
 			while ((read = stream.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
 			}
+			
 			out.flush();
 			out.close();
 		} catch (IOException e) {
 			throw new WebApplicationException("Error while uploading file. Please try again !!");
 		}
 		System.out.println("Alright");
+		quickStartSpeech.start(file.toPath());*/
+		
 		return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 	}
 
@@ -69,8 +79,9 @@ public class Adaptateur {
 	@Path("fichier/audio")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	// @RequestParam("uploadedFile") MultipartFile uploadedFileRef
-	public Response postFichierAudio(@FormDataParam("file") InputStream stream,
-			@FormDataParam("file") FormDataContentDisposition fileMetaData, @QueryParam("idPc") String idPc) {
+	public Response postFichierAudio(@FormParam("file") String stream, @QueryParam("idPc") String idPc) throws IOException, Exception {
+		
+		quickstartSpeech.start(Base64.getDecoder().decode(stream));
 
 		return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 	}
