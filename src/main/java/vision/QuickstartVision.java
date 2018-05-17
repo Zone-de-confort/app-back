@@ -1,5 +1,12 @@
 package vision;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /*
  * Copyright 2017 Google Inc.
  *
@@ -22,22 +29,23 @@ package vision;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
-import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.FaceAnnotation;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Feature.Type;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class QuickstartVision {
-	public static void main(String... args) throws Exception {
+	
+	/**
+	 * Méthode qui appelle l'api google de reconnaisance faciale, renvoie vrai si un anger mood est détécté.
+	 * @return vrai si en colère
+	 * @throws Exception pas de résultat
+	 */
+	public boolean start() throws Exception {
 		// Instantiates a client
+		boolean result = false;
 		try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
 
 			// The path to the image file to annotate
@@ -62,15 +70,26 @@ public class QuickstartVision {
 			for (AnnotateImageResponse res : responses) {
 				if (res.hasError()) {
 					System.out.printf("Error: %s\n", res.getError().getMessage());
-					return;
+					throw new Exception(res.getError().getMessage());
 				}
 
 				for (FaceAnnotation faces : res.getFaceAnnotationsList()) {
 					System.out.println("------ faces -------");
-					faces.getAllFields().forEach((k, v) -> System.out.printf("%s : %s\n", k, v.toString()));
+					/*
+					 * faces.getAllFields().forEach((k, v) -> {
+					 * if(k.getFullName().contains("likelihood")) { System.out.printf("%s : %s\n",
+					 * k, v.toString()); } });
+					 */
+
+					result = "LIKELY".equals(faces.getAllFields().entrySet().stream()
+							.filter(x -> x.getKey().toString().contains("anger_likelihood"))
+							.map(x -> x.getValue().toString()).collect(Collectors.joining()));
+					System.out.println(result);
+					
 				}
 			}
 		}
+		return result;
 	}
 }
 // [END vision_quickstart]
