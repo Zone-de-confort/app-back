@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import speech.QuickStartSpeech;
+
 /**
  * Classe principale de l'application
  * 
@@ -17,6 +19,9 @@ public class SpringServiceApplication {
 		SpringApplication.run(SpringServiceApplication.class, args);
 		
 		ApplicationContext ac = ApplicationContextProvider.getContext();
+		
+		/*QuickStartSpeech cc = ac.getBean(QuickStartSpeech.class);
+		cc.start(null);*/
 		
 		/*EnvoiMail envoiMail = (EnvoiMail) ac.getBean("envoiMail");
 		envoiMail.sendMail("2", "Bonjour");

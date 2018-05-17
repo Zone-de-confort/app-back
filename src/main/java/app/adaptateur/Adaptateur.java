@@ -52,11 +52,7 @@ public class Adaptateur {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response postFichierVideo(@FormDataParam("file") InputStream stream, @FormDataParam("file") FormDataContentDisposition fileMetaData,
 		 @QueryParam("idPc") String idPc) throws Exception {
-		System.out.println("PostFichier");
-		System.out.println(stream);
-		System.out.println(idPc);
-		
-		
+		System.out.println("Photo");
 		if(quickstartVision.start(Base64.getDecoder().decode(IOUtils.toByteArray(stream)))){
 			envoiMail.sendMail(idPc, "Vision");
 		}
@@ -89,10 +85,11 @@ public class Adaptateur {
 
 	@POST
 	@Path("fichier/audio")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	// @RequestParam("uploadedFile") MultipartFile uploadedFileRef
 	public Response postFichierAudio(@FormDataParam("file") InputStream stream, @QueryParam("idPc") String idPc) throws IOException, Exception {
-		
+		System.out.println("Audio");
+
 		if(quickstartSpeech.start(Base64.getDecoder().decode(IOUtils.toByteArray(stream)))) {
 			envoiMail.sendMail(idPc, "Speech");
 		}

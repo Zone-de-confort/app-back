@@ -76,17 +76,18 @@ public class QuickstartVision {
 				}
 
 				for (FaceAnnotation faces : res.getFaceAnnotationsList()) {
-					System.out.println("------ faces -------");
 					
-					 faces.getAllFields().forEach((k, v) -> {
+					/*faces.getAllFields().forEach((k, v) -> {
 					 if(k.getFullName().contains("likelihood")) { System.out.printf("%s : %s\n",
-					 k, v.toString()); } });
+					 k, v.toString()); } });*/
 					 
 
-					result = faces.getAllFields().entrySet().stream()
+					String anger = faces.getAllFields().entrySet().stream()
 							.filter(x -> x.getKey().toString().contains("anger_likelihood"))
-							.map(x -> x.getValue().toString()).collect(Collectors.joining()).contains("LIKELY");
-					System.out.println(result);
+							.map(x -> x.getValue().toString()).collect(Collectors.joining());
+					result = anger.equals("LIKELY") || anger.equals("VERY_LIKELY");
+					System.out.println("anger = " + result);
+					
 					
 				}
 			}
